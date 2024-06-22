@@ -74,6 +74,7 @@ function generateColorPalettes(imageData, maxPaletteSize) {
     const palette = getAvgColorFromSet(partitionedColors);
     palettes.push(convertColorArrToHexArr(palette));
   }
+  postMessage({ stage: "HELLLLP" });
   return palettes;
 }
 
