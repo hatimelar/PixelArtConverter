@@ -1,29 +1,8 @@
 onmessage = (event) => {
-  const imageData = event.data.imageData;
+  const imageSrc = event.data.imageSrc;
   if (event.data.job === "generateColorPalettes") {
-    const palettes = generateColorPalettes(
-      imageData,
-      event.data.maxPaletteSize
-    );
-    postMessage(palettes);
-  } else if (event.data.job === "generatePixelArt") {
-    debounceGeneration(event, imageData);
+    generateColorPalettes(imageSrc, event.data.maxPaletteSize);
   }
-};
-
-const debounceGeneration = (event, imageData) => {
-  const res = generatePixelartCustomPalette(
-    imageData,
-    event.data.palette,
-    event.data.ditheringIntensity,
-    event.data.ditheringMethod,
-    event.data.pixelSize,
-    event.data.noiseReductionLevel,
-    event.data.enableEdges,
-    event.data.edgeSensitivity
-  );
-
-  self.postMessage(res);
 };
 
 const BAYER8 = [
@@ -69,39 +48,52 @@ const COLORS = {
   GREEN: "GREEN",
   BLUE: "BLUE",
 };
+
 function clamp(number, low, high) {
   return Math.max(Math.min(number, high), low);
 }
-function generateColorPalettes(imageBitmap, maxPaletteSize) {
-  const offscreenCanvas = new OffscreenCanvas(
-    imageBitmap.width,
-    imageBitmap.height
-  );
-  const context = offscreenCanvas.getContext("2d");
+function loadImage(url) {
+  return new Promise(function (resolve, reject) {
+    const reader = new FileReader();
+    reader.onload = function (e) {
+      resolve(e.target.result);
+    };
+    reader.readAsDataURL(url);
+  });
+}
 
-  // Draw the ImageBitmap onto the OffscreenCanvas
-  context.drawImage(imageBitmap, 0, 0);
+function generateColorPalettes(imageSrc, maxPaletteSize) {
+  createImageBitmap(imageSrc).then((imageBitmap) => {
+    const offscreenCanvas = new OffscreenCanvas(
+      imageBitmap.width,
+      imageBitmap.height
+    );
+    const context = offscreenCanvas.getContext("2d");
 
-  // Get ImageData from the OffscreenCanvas
-  const imageData = context.getImageData(
-    0,
-    0,
-    offscreenCanvas.width,
-    offscreenCanvas.height
-  );
+    // Draw the ImageBitmap onto the OffscreenCanvas
+    context.drawImage(imageBitmap, 0, 0);
 
-  const palettes = [];
-  postMessage({ stage: "Scanning image" });
-  let colors = getUniqueColors(imageData);
-  postMessage({ stage: "Creating color pallete" });
+    // Get ImageData from the OffscreenCanvas
+    const imageData = context.getImageData(
+      0,
+      0,
+      offscreenCanvas.width,
+      offscreenCanvas.height
+    );
 
-  for (let i = 2; i <= maxPaletteSize; i *= 2) {
-    const partitionedColors = [];
-    medianCut(colors, Math.log2(i), partitionedColors);
-    const palette = getAvgColorFromSet(partitionedColors);
-    palettes.push(convertColorArrToHexArr(palette));
-  }
-  return palettes;
+    const palettes = [];
+    postMessage({ stage: "Scanning image" });
+    let colors = getUniqueColors(imageData);
+    postMessage({ stage: "Creating color pallete" });
+
+    for (let i = 2; i <= maxPaletteSize; i *= 2) {
+      const partitionedColors = [];
+      medianCut(colors, Math.log2(i), partitionedColors);
+      const palette = getAvgColorFromSet(partitionedColors);
+      palettes.push(convertColorArrToHexArr(palette));
+    }
+    postMessage(palettes);
+  });
 }
 
 function convertDecToTwoDigitHex(num) {
