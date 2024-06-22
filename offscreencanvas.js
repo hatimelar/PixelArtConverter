@@ -1,7 +1,11 @@
 onmessage = (event) => {
   const imageData = event.data.imageData;
   if (event.data.job === "generateColorPalettes") {
-    postMessage(generateColorPalettes(imageData, event.data.maxPaletteSize));
+    //generateColorPalettes(imageData, event.data.maxPaletteSize);
+    postMessage({
+      stage:
+        "sadsadsadsadyuigvqwFA8uiy7fcvgbwqaseUY IJHKRFC WSQAbujikDVEqawUI(OSDcv",
+    });
   }
 };
 
@@ -69,12 +73,12 @@ function loadImage(url) {
 }
 
 function generateColorPalettes(imageData, maxPaletteSize) {
-  const palettes = [];
   postMessage({ stage: "Scanning image" });
   let colors = getUniqueColors(imageData);
   postMessage({ stage: "Creating color pallete" });
 
-  return medianCut(colors, maxPaletteSize);
+  let palettes = medianCut(colors, maxPaletteSize);
+  postMessage(palettes);
 }
 
 function convertDecToTwoDigitHex(num) {
@@ -517,7 +521,7 @@ function medianCut(colors, maxPaletteSize) {
       let palette = [];
       let j = 0;
       for (; j < i && itr <= 16; j++) {
-        const color = new Color(0, 0, 0, 1);
+        const color = new Color(0, 0, 0, 255);
         color.r = Math.floor(
           (partitionSum[j * 2].r + partitionSum[j * 2 + 1].r) /
             (partitions[j * 2 + 1].high - partitions[j * 2].low + 1)
@@ -533,7 +537,7 @@ function medianCut(colors, maxPaletteSize) {
         palette.push(color);
       }
       for (j = j * 2; j < partitions.length; j++) {
-        const color = new Color(0, 0, 0, 1);
+        const color = new Color(0, 0, 0, 255);
         color.r = Math.floor(
           partitionSum[j].r / (partitions[j].high - partitions[j].low + 1)
         );
