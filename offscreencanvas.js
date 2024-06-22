@@ -1,11 +1,7 @@
 onmessage = (event) => {
   const imageData = event.data.imageData;
   if (event.data.job === "generateColorPalettes") {
-    //generateColorPalettes(imageData, event.data.maxPaletteSize);
-    postMessage({
-      stage:
-        "sadsadsadsadyuigvqwFA8uiy7fcvgbwqaseUY IJHKRFC WSQAbujikDVEqawUI(OSDcv",
-    });
+    generateColorPalettes(imageData, event.data.maxPaletteSize);
   }
 };
 
@@ -77,8 +73,8 @@ function generateColorPalettes(imageData, maxPaletteSize) {
   let colors = getUniqueColors(imageData);
   postMessage({ stage: "Creating color pallete" });
 
-  let palettes = medianCut(colors, maxPaletteSize);
-  postMessage(palettes);
+  //let palettes = medianCut(colors, maxPaletteSize);
+  postMessage([]);
 }
 
 function convertDecToTwoDigitHex(num) {
