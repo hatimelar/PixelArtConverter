@@ -73,7 +73,7 @@ function generateColorPalettes(imageData, maxPaletteSize) {
   let colors = getUniqueColors(imageData);
   postMessage({ stage: "Creating color pallete" });
 
-  //let palettes = medianCut(colors, maxPaletteSize);
+  let palettes = medianCut(colors, maxPaletteSize);
   postMessage([]);
 }
 
