@@ -1,8 +1,7 @@
 onmessage = (event) => {
-  postMessage("i got here");
-  const imageSrc = event.data.imageSrc;
+  const imageData = event.data.imageData;
   if (event.data.job === "generateColorPalettes") {
-    generateColorPalettes(imageSrc, event.data.maxPaletteSize);
+    generateColorPalettes(imageData, event.data.maxPaletteSize);
   }
 };
 
@@ -63,38 +62,19 @@ function loadImage(url) {
   });
 }
 
-function generateColorPalettes(imageSrc, maxPaletteSize) {
-  createImageBitmap(imageSrc).then((imageBitmap) => {
-    const offscreenCanvas = new OffscreenCanvas(
-      imageBitmap.width,
-      imageBitmap.height
-    );
-    const context = offscreenCanvas.getContext("2d");
+function generateColorPalettes(imageData, maxPaletteSize) {
+  const palettes = [];
+  postMessage({ stage: "Scanning image" });
+  let colors = getUniqueColors(imageData);
+  postMessage({ stage: "Creating color pallete" });
 
-    // Draw the ImageBitmap onto the OffscreenCanvas
-    context.drawImage(imageBitmap, 0, 0);
-
-    // Get ImageData from the OffscreenCanvas
-    const imageData = context.getImageData(
-      0,
-      0,
-      offscreenCanvas.width,
-      offscreenCanvas.height
-    );
-
-    const palettes = [];
-    postMessage({ stage: "Scanning image" });
-    let colors = getUniqueColors(imageData);
-    postMessage({ stage: "Creating color pallete" });
-
-    for (let i = 2; i <= maxPaletteSize; i *= 2) {
-      const partitionedColors = [];
-      medianCut(colors, Math.log2(i), partitionedColors);
-      const palette = getAvgColorFromSet(partitionedColors);
-      palettes.push(convertColorArrToHexArr(palette));
-    }
-    postMessage(palettes);
-  });
+  for (let i = 2; i <= maxPaletteSize; i *= 2) {
+    const partitionedColors = [];
+    medianCut(colors, Math.log2(i), partitionedColors);
+    const palette = getAvgColorFromSet(partitionedColors);
+    palettes.push(convertColorArrToHexArr(palette));
+  }
+  postMessage(palettes);
 }
 
 function convertDecToTwoDigitHex(num) {
