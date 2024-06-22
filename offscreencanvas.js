@@ -1,4 +1,5 @@
 onmessage = (event) => {
+  postMessage("i got here");
   const imageSrc = event.data.imageSrc;
   if (event.data.job === "generateColorPalettes") {
     generateColorPalettes(imageSrc, event.data.maxPaletteSize);
