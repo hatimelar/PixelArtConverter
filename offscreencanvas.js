@@ -68,12 +68,6 @@ function generateColorPalettes(imageData, maxPaletteSize) {
   let colors = getUniqueColors(imageData);
   postMessage({ stage: "Creating color pallete" });
 
-  for (let i = 2; i <= 16; i *= 2) {
-    const partitionedColors = [];
-    medianCut(colors, Math.log2(i), partitionedColors);
-    const palette = getAvgColorFromSet(partitionedColors);
-    palettes.push(convertColorArrToHexArr(palette));
-  }
   postMessage({ stage: "HELLLLP" });
   return palettes;
 }
