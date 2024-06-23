@@ -478,7 +478,7 @@ function medianCut(colors, maxPaletteSize) {
   let low = 0;
   let high = colors.length;
   let partitions = [new Interval(low, high)];
-
+  postMessage("???");
   let palettes = [];
   for (let itr = 2; itr <= maxPaletteSize; itr *= 2) {
     let newPartitions = [];
