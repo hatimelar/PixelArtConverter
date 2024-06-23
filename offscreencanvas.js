@@ -2,7 +2,6 @@ onmessage = (event) => {
   postMessage({ stage: "HELLLOO???" });
   const bitMap = event.data.bitMap;
   if (event.data.job === "generateColorPalettes") {
-    postMessage({ stage: "HELLLOO2222" });
     const palettes = generateColorPalettes(bitMap, event.data.maxPaletteSize);
     //postMessage(palettes);
   } else if (event.data.job === "generatePixelArt") {
@@ -72,12 +71,13 @@ function clamp(number, low, high) {
   return Math.max(Math.min(number, high), low);
 }
 function generateColorPalettes(imageBitmap, maxPaletteSize) {
+  postMessage({ stage: "1" });
   const offscreenCanvas = new OffscreenCanvas(
     imageBitmap.width,
     imageBitmap.height
   );
   const context = offscreenCanvas.getContext("2d");
-
+  postMessage({ stage: "2" });
   // Draw the ImageBitmap onto the OffscreenCanvas
   context.drawImage(imageBitmap, 0, 0);
 
@@ -88,7 +88,7 @@ function generateColorPalettes(imageBitmap, maxPaletteSize) {
     offscreenCanvas.width,
     offscreenCanvas.height
   );
-
+  postMessage({ stage: "3" });
   const palettes = [];
   postMessage({ stage: "Scanning image" });
   let colors = getUniqueColors(imageData);
