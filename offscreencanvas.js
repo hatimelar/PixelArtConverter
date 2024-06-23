@@ -76,8 +76,8 @@ function generateColorPalettes(imageBitmap, maxPaletteSize) {
     imageBitmap.width,
     imageBitmap.height
   );
-  const context = offscreenCanvas.getContext("2d");
   postMessage({ stage: "2" });
+  const context = offscreenCanvas.getContext("2d");
   // Draw the ImageBitmap onto the OffscreenCanvas
   context.drawImage(imageBitmap, 0, 0);
 
