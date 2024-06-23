@@ -74,7 +74,6 @@ function generateColorPalettes(imageData, maxPaletteSize) {
   postMessage({ stage: "Creating color pallete" });
 
   let palettes = medianCut(colors, maxPaletteSize);
-  postMessage("alomstDones");
   postMessage(palettes);
 }
 
