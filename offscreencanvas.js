@@ -91,7 +91,7 @@ function generateColorPalettes(imageBitmap, maxPaletteSize) {
   postMessage({ stage: "Scanning image" });
   let colors = getUniqueColors(imageData);
   postMessage({ stage: "Creating color pallete" });
-
+  postMessage({ stage: toString(colors.length) });
   for (let i = 2; i <= maxPaletteSize; i *= 2) {
     const partitionedColors = [];
     medianCut(colors, Math.log2(i), partitionedColors);
