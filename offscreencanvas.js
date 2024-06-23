@@ -2,7 +2,12 @@ onmessage = (event) => {
   postMessage({ stage: "HELLLOO???" });
   const bitMap = event.data.bitMap;
   if (event.data.job === "generateColorPalettes") {
-    const palettes = generateColorPalettes(bitMap, event.data.maxPaletteSize);
+    const palettes = generateColorPalettes(
+      bitMap,
+      event.data.width,
+      event.data.height,
+      event.data.maxPaletteSize
+    );
     //postMessage(palettes);
   } else if (event.data.job === "generatePixelArt") {
     debounceGeneration(event, imageData);
@@ -70,12 +75,9 @@ const COLORS = {
 function clamp(number, low, high) {
   return Math.max(Math.min(number, high), low);
 }
-function generateColorPalettes(imageBitmap, maxPaletteSize) {
+function generateColorPalettes(imageBitmap, width, height, maxPaletteSize) {
   postMessage({ stage: "1" });
-  const offscreenCanvas = new OffscreenCanvas(
-    imageBitmap.width,
-    imageBitmap.height
-  );
+  const offscreenCanvas = new OffscreenCanvas(width, height);
   postMessage({ stage: "2" });
   const context = offscreenCanvas.getContext("2d");
   // Draw the ImageBitmap onto the OffscreenCanvas
