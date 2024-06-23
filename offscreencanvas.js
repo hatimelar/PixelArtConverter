@@ -74,8 +74,8 @@ function generateColorPalettes(imageData, maxPaletteSize) {
   postMessage({ stage: "Creating color pallete" });
 
   let palettes = medianCut(colors, maxPaletteSize);
-  postMessage("alomstDones");
-  postMessage([]);
+  postMessage({ stage: "alomstDones" });
+  postMessage(palettes);
 }
 
 function convertDecToTwoDigitHex(num) {
