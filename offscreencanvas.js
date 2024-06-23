@@ -2,6 +2,7 @@ onmessage = (event) => {
   postMessage({ stage: "HELLLOO???" });
   const bitMap = event.data.bitMap;
   if (event.data.job === "generateColorPalettes") {
+    postMessage({ stage: "HELLLOO2222" });
     const palettes = generateColorPalettes(bitMap, event.data.maxPaletteSize);
     //postMessage(palettes);
   } else if (event.data.job === "generatePixelArt") {
