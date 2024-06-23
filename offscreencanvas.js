@@ -77,9 +77,10 @@ function clamp(number, low, high) {
 }
 function generateColorPalettes(imageBitmap, width, height, maxPaletteSize) {
   postMessage({ stage: "1" });
+
   const offscreenCanvas = new OffscreenCanvas(width, height);
   postMessage({ stage: "2" });
-  const context = offscreenCanvas.getContext("2d");
+  /*const context = offscreenCanvas.getContext("2d");
   // Draw the ImageBitmap onto the OffscreenCanvas
   context.drawImage(imageBitmap, 0, 0);
 
@@ -103,7 +104,7 @@ function generateColorPalettes(imageBitmap, width, height, maxPaletteSize) {
     palettes.push(convertColorArrToHexArr(palette));
   }
   postMessage({ stage: "Done" });
-  return palettes;
+  return palettes;*/
 }
 
 function convertDecToTwoDigitHex(num) {
