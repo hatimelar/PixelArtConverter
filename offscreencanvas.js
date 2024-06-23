@@ -417,6 +417,7 @@ function findNearestColor2(mainColor, pallete) {
 // Returns an enum representing the color/channel with the highest range
 function colorHighestRange(colors, begin, end) {
   // Finding the color with the highest range
+
   let maxR = colors[begin].r;
   let minR = colors[begin].r;
 
@@ -498,7 +499,7 @@ function medianCut(colors, maxPaletteSize) {
       }
 
       let medianIndex =
-        Math.floor((interval.high - interval.low + 1) / 2) + interval.low;
+        Math.floor((interval.high - interval.low) / 2) + interval.low;
 
       newPartitions.push(new Interval(interval.low, medianIndex));
       newPartitions.push(new Interval(medianIndex, interval.high));
