@@ -1,6 +1,8 @@
 onmessage = (event) => {
   const imageData = event.data.imageData;
+  postMessage({ stage: "1" });
   if (event.data.job === "generateColorPalettes") {
+    postMessage({ stage: "2" });
     const palettes = generateColorPalettes(
       imageData,
       event.data.maxPaletteSize
