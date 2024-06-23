@@ -1,26 +1,13 @@
 onmessage = (event) => {
   const bitMap = event.data.bitMap;
   if (event.data.job === "generateColorPalettes") {
-    const palettes = generateColorPalettes(bitMap, event.data.maxPaletteSize);
-    postMessage(palettes);
-  } else if (event.data.job === "generatePixelArt") {
-    debounceGeneration(event, imageData);
+    generateColorPalettes(
+      bitMap,
+      event.data.width,
+      event.data.height,
+      event.data.maxPaletteSize
+    );
   }
-};
-
-const debounceGeneration = (event, imageData) => {
-  const res = generatePixelartCustomPalette(
-    imageData,
-    event.data.palette,
-    event.data.ditheringIntensity,
-    event.data.ditheringMethod,
-    event.data.pixelSize,
-    event.data.noiseReductionLevel,
-    event.data.enableEdges,
-    event.data.edgeSensitivity
-  );
-
-  self.postMessage(res);
 };
 
 const BAYER8 = [
@@ -66,39 +53,39 @@ const COLORS = {
   GREEN: "GREEN",
   BLUE: "BLUE",
 };
+class Interval {
+  constructor(low, high) {
+    this.low = low;
+    this.high = high;
+  }
+}
+
 function clamp(number, low, high) {
   return Math.max(Math.min(number, high), low);
 }
-function generateColorPalettes(imageBitmap, maxPaletteSize) {
-  const offscreenCanvas = new OffscreenCanvas(
-    imageBitmap.width,
-    imageBitmap.height
-  );
-  const context = offscreenCanvas.getContext("2d");
+function loadImage(url) {
+  return new Promise(function (resolve, reject) {
+    const reader = new FileReader();
+    reader.onload = function (e) {
+      resolve(e.target.result);
+    };
+    reader.readAsDataURL(url);
+  });
+}
 
-  // Draw the ImageBitmap onto the OffscreenCanvas
-  context.drawImage(imageBitmap, 0, 0);
+function generateColorPalettes(bitMap, width, height, maxPaletteSize) {
+  const offscreencanvas = new OffscreenCanvas(width, height);
 
-  // Get ImageData from the OffscreenCanvas
-  const imageData = context.getImageData(
-    0,
-    0,
-    offscreenCanvas.width,
-    offscreenCanvas.height
-  );
+  const context = offscreencanvas.getContext("2d");
 
-  const palettes = [];
+  context.drawImage(bitMap, 0, 0, width, height);
+  const imageData = context.getImageData(0, 0, width, height);
   postMessage({ stage: "Scanning image" });
   let colors = getUniqueColors(imageData);
   postMessage({ stage: "Creating color pallete" });
 
-  for (let i = 2; i <= maxPaletteSize; i *= 2) {
-    const partitionedColors = [];
-    medianCut(colors, Math.log2(i), partitionedColors);
-    const palette = getAvgColorFromSet(partitionedColors);
-    palettes.push(convertColorArrToHexArr(palette));
-  }
-  return palettes;
+  let palettes = medianCut(colors, maxPaletteSize);
+  postMessage(palettes);
 }
 
 function convertDecToTwoDigitHex(num) {
@@ -441,6 +428,7 @@ function findNearestColor2(mainColor, pallete) {
 // Returns an enum representing the color/channel with the highest range
 function colorHighestRange(colors, begin, end) {
   // Finding the color with the highest range
+
   let maxR = colors[begin].r;
   let minR = colors[begin].r;
 
@@ -450,7 +438,7 @@ function colorHighestRange(colors, begin, end) {
   let maxB = colors[begin].b;
   let minB = colors[begin].b;
   let color = {};
-  for (let i = begin; i <= end; i++) {
+  for (let i = begin; i < end; i++) {
     color = colors[i];
     if (color.r > maxR) maxR = color.r;
     if (color.r < minR) minR = color.r;
@@ -481,33 +469,99 @@ function colorHighestRange(colors, begin, end) {
 // Color[] colors, int begin, int end, int depth, Color[][] partitionedColors
 // Takes an array of colors a beginning and end index and a two dimensional array of colors
 // that gets populated with color partitions. The functions returns nothing.
-function medianCut(colors, depth, partitionedColors) {
-  //Base case
-  if (depth == 0 || colors.length == 1) {
-    // Take the partition of pixels passed and add them to partitionedColors vector
-    let partition = [];
-    for (let i = 0; i < colors.length; i++) {
-      partition.push(colors[i]);
+const sortSegment = (array, low, high, comparator) => {
+  const segment = array.slice(low, high);
+  segment.sort(comparator);
+  for (let i = low; i < high; i++) array[i] = segment[i - low];
+};
+
+const getIntervalSum = (colors, low, high) => {
+  let colorSum = new Color(0, 0, 0, 1);
+
+  for (let i = low; i < high; i++) {
+    colorSum.r += colors[i].r;
+    colorSum.g += colors[i].g;
+    colorSum.b += colors[i].b;
+  }
+  return colorSum;
+};
+function medianCut(colors, maxPaletteSize) {
+  let low = 0;
+  let high = colors.length;
+  let partitions = [new Interval(low, high)];
+
+  let palettes = [];
+  for (let itr = 2; itr <= maxPaletteSize; itr *= 2) {
+    let newPartitions = [];
+
+    for (let i = 0; i < partitions.length; i++) {
+      let interval = partitions[i];
+
+      let highestRange = colorHighestRange(colors, interval.low, interval.high);
+      switch (highestRange) {
+        case COLORS.RED:
+          sortSegment(colors, interval.low, interval.high, rColorComparator);
+          break;
+        case COLORS.GREEN:
+          sortSegment(colors, interval.low, interval.high, gColorComparator);
+          break;
+        case COLORS.BLUE:
+          sortSegment(colors, interval.low, interval.high, bColorComparator);
+      }
+
+      let medianIndex =
+        Math.floor((interval.high - interval.low) / 2) + interval.low;
+
+      newPartitions.push(new Interval(interval.low, medianIndex));
+      newPartitions.push(new Interval(medianIndex, interval.high));
     }
-    partitionedColors.push(partition);
-    return;
-  }
-  let highestRange = colorHighestRange(colors, 0, colors.length - 1);
-  switch (highestRange) {
-    case COLORS.RED:
-      colors.sort(rColorComparator);
-      break;
-    case COLORS.GREEN:
-      colors.sort(gColorComparator);
-      break;
-    case COLORS.BLUE:
-      colors.sort(bColorComparator);
+    partitions = newPartitions;
+
+    const partitionSum = [];
+    for (let i = 0; i < partitions.length; i++) {
+      partitionSum.push(
+        getIntervalSum(colors, partitions[i].low, partitions[i].high)
+      );
+    }
+
+    //for (let i = itr <= 16 ? partitions.length / 2 - 1 : 0; i >= 0; i--) {
+
+    let palette = [];
+    let j = 0;
+    /*for (; j < i && itr <= 16; j++) {
+      const color = new Color(0, 0, 0, 255);
+      color.r = Math.floor(
+        (partitionSum[j * 2].r + partitionSum[j * 2 + 1].r) /
+          (partitions[j * 2 + 1].high - partitions[j * 2].low + 1)
+      );
+      color.g = Math.floor(
+        (partitionSum[j * 2].g + partitionSum[j * 2 + 1].g) /
+          (partitions[j * 2 + 1].high - partitions[j * 2].low + 1)
+      );
+      color.b = Math.floor(
+        (partitionSum[j * 2].b + partitionSum[j * 2 + 1].b) /
+          (partitions[j * 2 + 1].high - partitions[j * 2].low + 1)
+      );
+      palette.push(color);
+    }*/
+    for (j = j * 2; j < partitions.length; j++) {
+      const color = new Color(0, 0, 0, 255);
+      color.r = Math.floor(
+        partitionSum[j].r / (partitions[j].high - partitions[j].low + 1)
+      );
+      color.g = Math.floor(
+        partitionSum[j].g / (partitions[j].high - partitions[j].low + 1)
+      );
+      color.b = Math.floor(
+        partitionSum[j].b / (partitions[j].high - partitions[j].low + 1)
+      );
+      palette.push(color);
+    }
+
+    palettes.push(convertColorArrToHexArr(palette));
   }
 
-  let medianIndex = Math.floor(colors.length / 2);
-
-  medianCut(colors.slice(0, medianIndex), depth - 1, partitionedColors);
-  medianCut(colors.slice(medianIndex), depth - 1, partitionedColors);
+  return palettes;
 }
 
 function rColorComparator(a, b) {
