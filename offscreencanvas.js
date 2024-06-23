@@ -1,10 +1,7 @@
 onmessage = (event) => {
-  const imageData = event.data.imageData;
+  const bitMap = event.data.bitMap;
   if (event.data.job === "generateColorPalettes") {
-    const palettes = generateColorPalettes(
-      imageData,
-      event.data.maxPaletteSize
-    );
+    const palettes = generateColorPalettes(bitMap, event.data.maxPaletteSize);
     postMessage(palettes);
   } else if (event.data.job === "generatePixelArt") {
     debounceGeneration(event, imageData);
