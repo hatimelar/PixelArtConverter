@@ -1,4 +1,5 @@
 onmessage = (event) => {
+  postMessage({ stage: "HELLLOO???" });
   const bitMap = event.data.bitMap;
   if (event.data.job === "generateColorPalettes") {
     const palettes = generateColorPalettes(bitMap, event.data.maxPaletteSize);
