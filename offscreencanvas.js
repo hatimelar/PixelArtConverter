@@ -74,6 +74,7 @@ function generateColorPalettes(imageData, maxPaletteSize) {
   postMessage({ stage: "Creating color pallete" });
 
   let palettes = medianCut(colors, maxPaletteSize);
+  postMessage("alomstDones");
   postMessage(palettes);
 }
 
@@ -513,41 +514,40 @@ function medianCut(colors, maxPaletteSize) {
     }
 
     //for (let i = itr <= 16 ? partitions.length / 2 - 1 : 0; i >= 0; i--) {
-    for (let i = 0; i >= 0; i--) {
-      let palette = [];
-      let j = 0;
-      for (; j < i && itr <= 16; j++) {
-        const color = new Color(0, 0, 0, 255);
-        color.r = Math.floor(
-          (partitionSum[j * 2].r + partitionSum[j * 2 + 1].r) /
-            (partitions[j * 2 + 1].high - partitions[j * 2].low + 1)
-        );
-        color.g = Math.floor(
-          (partitionSum[j * 2].g + partitionSum[j * 2 + 1].g) /
-            (partitions[j * 2 + 1].high - partitions[j * 2].low + 1)
-        );
-        color.b = Math.floor(
-          (partitionSum[j * 2].b + partitionSum[j * 2 + 1].b) /
-            (partitions[j * 2 + 1].high - partitions[j * 2].low + 1)
-        );
-        palette.push(color);
-      }
-      for (j = j * 2; j < partitions.length; j++) {
-        const color = new Color(0, 0, 0, 255);
-        color.r = Math.floor(
-          partitionSum[j].r / (partitions[j].high - partitions[j].low + 1)
-        );
-        color.g = Math.floor(
-          partitionSum[j].g / (partitions[j].high - partitions[j].low + 1)
-        );
-        color.b = Math.floor(
-          partitionSum[j].b / (partitions[j].high - partitions[j].low + 1)
-        );
-        palette.push(color);
-      }
 
-      palettes.push(convertColorArrToHexArr(palette));
+    let palette = [];
+    let j = 0;
+    for (; j < i && itr <= 16; j++) {
+      const color = new Color(0, 0, 0, 255);
+      color.r = Math.floor(
+        (partitionSum[j * 2].r + partitionSum[j * 2 + 1].r) /
+          (partitions[j * 2 + 1].high - partitions[j * 2].low + 1)
+      );
+      color.g = Math.floor(
+        (partitionSum[j * 2].g + partitionSum[j * 2 + 1].g) /
+          (partitions[j * 2 + 1].high - partitions[j * 2].low + 1)
+      );
+      color.b = Math.floor(
+        (partitionSum[j * 2].b + partitionSum[j * 2 + 1].b) /
+          (partitions[j * 2 + 1].high - partitions[j * 2].low + 1)
+      );
+      palette.push(color);
     }
+    for (j = j * 2; j < partitions.length; j++) {
+      const color = new Color(0, 0, 0, 255);
+      color.r = Math.floor(
+        partitionSum[j].r / (partitions[j].high - partitions[j].low + 1)
+      );
+      color.g = Math.floor(
+        partitionSum[j].g / (partitions[j].high - partitions[j].low + 1)
+      );
+      color.b = Math.floor(
+        partitionSum[j].b / (partitions[j].high - partitions[j].low + 1)
+      );
+      palette.push(color);
+    }
+
+    palettes.push(convertColorArrToHexArr(palette));
   }
 
   return palettes;
