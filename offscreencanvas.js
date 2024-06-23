@@ -75,7 +75,7 @@ function generateColorPalettes(imageData, maxPaletteSize) {
 
   let palettes = medianCut(colors, maxPaletteSize);
   postMessage("alomstDones");
-  postMessage(palettes);
+  postMessage([]);
 }
 
 function convertDecToTwoDigitHex(num) {
@@ -480,7 +480,7 @@ function medianCut(colors, maxPaletteSize) {
   let partitions = [new Interval(low, high)];
 
   let palettes = [];
-  for (let itr = 2; itr <= 2; itr *= 2) {
+  for (let itr = 2; itr <= maxPaletteSize; itr *= 2) {
     let newPartitions = [];
 
     for (let i = 0; i < partitions.length; i++) {
@@ -549,7 +549,6 @@ function medianCut(colors, maxPaletteSize) {
 
     palettes.push(convertColorArrToHexArr(palette));
   }
-  postMessage({ stage: "???" });
 
   return palettes;
 }
