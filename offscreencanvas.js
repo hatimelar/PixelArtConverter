@@ -517,7 +517,7 @@ function medianCut(colors, maxPaletteSize) {
 
     let palette = [];
     let j = 0;
-    for (; j < i && itr <= 16; j++) {
+    for (; itr <= 16; j++) {
       const color = new Color(0, 0, 0, 255);
       color.r = Math.floor(
         (partitionSum[j * 2].r + partitionSum[j * 2 + 1].r) /
