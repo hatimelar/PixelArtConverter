@@ -75,6 +75,7 @@ function generateColorPalettes(imageData, maxPaletteSize) {
 
   let palettes = medianCut(colors, maxPaletteSize);
   postMessage({ stage: "alomstDones" });
+  console.log(palettes);
   postMessage(palettes);
 }
 
@@ -356,7 +357,7 @@ function getUniqueColors(imageData) {
   const colors = [];
   const colorSet = new Set();
 
-  const imgDataArr = imageData.data;
+  const imgDataArr = imageData;
 
   // Adding pixels to a temporary vector
   let color = [];
