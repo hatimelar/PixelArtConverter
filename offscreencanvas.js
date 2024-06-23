@@ -1,10 +1,7 @@
 onmessage = (event) => {
-  const imageData = event.data.imageData;
+  const bitMap = event.data.bitMap;
   if (event.data.job === "generateColorPalettes") {
-    const palettes = generateColorPalettes(
-      imageData,
-      event.data.maxPaletteSize
-    );
+    const palettes = generateColorPalettes(bitMap, event.data.maxPaletteSize);
     postMessage(palettes);
   } else if (event.data.job === "generatePixelArt") {
     debounceGeneration(event, imageData);
@@ -72,7 +69,24 @@ const COLORS = {
 function clamp(number, low, high) {
   return Math.max(Math.min(number, high), low);
 }
-function generateColorPalettes(imageData, maxPaletteSize) {
+function generateColorPalettes(imageBitmap, maxPaletteSize) {
+  const offscreenCanvas = new OffscreenCanvas(
+    imageBitmap.width,
+    imageBitmap.height
+  );
+  const context = offscreenCanvas.getContext("2d");
+
+  // Draw the ImageBitmap onto the OffscreenCanvas
+  context.drawImage(imageBitmap, 0, 0);
+
+  // Get ImageData from the OffscreenCanvas
+  const imageData = context.getImageData(
+    0,
+    0,
+    offscreenCanvas.width,
+    offscreenCanvas.height
+  );
+
   const palettes = [];
   postMessage({ stage: "Scanning image" });
   let colors = getUniqueColors(imageData);
