@@ -516,7 +516,7 @@ function medianCut(colors, maxPaletteSize) {
     //for (let i = itr <= 16 ? partitions.length / 2 - 1 : 0; i >= 0; i--) {
 
     let palette = [];
-    let j = 0;
+    //let j = 0;
     /*for (; itr <= 16; j++) {
       const color = new Color(0, 0, 0, 255);
       color.r = Math.floor(
@@ -533,7 +533,7 @@ function medianCut(colors, maxPaletteSize) {
       );
       palette.push(color);
     }*/
-    for (j = j * 2; j < partitions.length; j++) {
+    for (let j = 0; j < partitions.length; j++) {
       const color = new Color(0, 0, 0, 255);
       color.r = Math.floor(
         partitionSum[j].r / (partitions[j].high - partitions[j].low + 1)
@@ -546,8 +546,9 @@ function medianCut(colors, maxPaletteSize) {
       );
       palette.push(color);
     }
-    postMessage({ stage: "???" });
+    postMessage({ stage: "??" });
     palettes.push(convertColorArrToHexArr(palette));
+    postMessage({ stage: "???" });
   }
 
   return palettes;
