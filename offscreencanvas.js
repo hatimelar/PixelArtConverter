@@ -98,6 +98,7 @@ function generateColorPalettes(imageBitmap, maxPaletteSize) {
     const palette = getAvgColorFromSet(partitionedColors);
     palettes.push(convertColorArrToHexArr(palette));
   }
+  postMessage({ stage: "Done" });
   return palettes;
 }
 
