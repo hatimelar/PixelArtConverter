@@ -1,7 +1,11 @@
 onmessage = (event) => {
   const imageData = event.data.imageData;
   if (event.data.job === "generateColorPalettes") {
-    generateColorPalettes(imageData, event.data.maxPaletteSize);
+    const palettes = generateColorPalettes(
+      imageData,
+      event.data.maxPaletteSize
+    );
+    postMessage(palettes);
   }
 };
 
@@ -73,8 +77,7 @@ function generateColorPalettes(imageData, maxPaletteSize) {
   let colors = getUniqueColors(imageData);
   postMessage({ stage: "Creating color pallete" });
 
-  let palettes = medianCut(colors, maxPaletteSize);
-  postMessage(palettes);
+  return medianCut(colors, maxPaletteSize);
 }
 
 function convertDecToTwoDigitHex(num) {
