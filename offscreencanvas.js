@@ -468,9 +468,9 @@ const getIntervalSum = (colors, low, high) => {
   let colorSum = new Color(0, 0, 0, 1);
 
   for (let i = low; i < high; i++) {
-    colorSum.r += colors[i].r;
-    colorSum.g += colors[i].g;
-    colorSum.b += colors[i].b;
+    colorSum.r += colors[i].r / 255;
+    colorSum.g += colors[i].g / 255;
+    colorSum.b += colors[i].b / 255;
   }
   return colorSum;
 };
@@ -536,20 +536,20 @@ function medianCut(colors, maxPaletteSize) {
     for (let j = 0; j < partitions.length; j++) {
       const color = new Color(0, 0, 0, 255);
       color.r = Math.floor(
-        partitionSum[j].r / (partitions[j].high - partitions[j].low + 1)
+        (partitionSum[j].r / (partitions[j].high - partitions[j].low + 1)) * 255
       );
       color.g = Math.floor(
-        partitionSum[j].g / (partitions[j].high - partitions[j].low + 1)
+        (partitionSum[j].g / (partitions[j].high - partitions[j].low + 1)) * 255
       );
       color.b = Math.floor(
-        partitionSum[j].b / (partitions[j].high - partitions[j].low + 1)
+        (partitionSum[j].b / (partitions[j].high - partitions[j].low + 1)) * 255
       );
       palette.push(color);
     }
-    postMessage({ stage: "??" });
+
     palettes.push(convertColorArrToHexArr(palette));
-    postMessage({ stage: "???" });
   }
+  postMessage({ stage: "???" });
 
   return palettes;
 }
