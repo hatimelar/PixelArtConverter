@@ -73,10 +73,7 @@ function generateColorPalettes(imageData, maxPaletteSize) {
   let colors = getUniqueColors(imageData);
   postMessage({ stage: "Creating color pallete" });
 
-  let palettes = medianCut(colors, maxPaletteSize);
-  postMessage({ stage: "alomstDones" });
-  console.log(palettes);
-  postMessage(palettes);
+  medianCut(colors, maxPaletteSize);
 }
 
 function convertDecToTwoDigitHex(num) {
@@ -551,7 +548,7 @@ function medianCut(colors, maxPaletteSize) {
     palettes.push(convertColorArrToHexArr(palette));
   }
 
-  return palettes;
+  postMessage(palettes);
 }
 
 function rColorComparator(a, b) {
