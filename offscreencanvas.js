@@ -480,7 +480,7 @@ function medianCut(colors, maxPaletteSize) {
   let partitions = [new Interval(low, high)];
 
   let palettes = [];
-  for (let itr = 2; itr <= maxPaletteSize; itr *= 2) {
+  for (let itr = 2; itr <= 2; itr *= 2) {
     let newPartitions = [];
 
     for (let i = 0; i < partitions.length; i++) {
