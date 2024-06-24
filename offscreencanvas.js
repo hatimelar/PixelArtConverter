@@ -1,7 +1,12 @@
 onmessage = (event) => {
-  const imageData = event.data.imageData;
+  const bitMap = event.data.bitMap;
   if (event.data.job === "generateColorPalettes") {
-    generateColorPalettes(imageData, event.data.maxPaletteSize);
+    generateColorPalettes(
+      bitMap,
+      event.data.width,
+      event.data.height,
+      event.data.maxPaletteSize
+    );
   }
 };
 
@@ -68,7 +73,13 @@ function loadImage(url) {
   });
 }
 
-function generateColorPalettes(imageData, maxPaletteSize) {
+function generateColorPalettes(bitMap, width, height, maxPaletteSize) {
+  const offscreencanvas = new OffscreenCanvas(width, height);
+
+  const context = offscreencanvas.getContext("2d");
+
+  context.drawImage(bitMap, 0, 0, width, height);
+  const imageData = context.getImageData(0, 0, width, height);
   postMessage({ stage: "Scanning image" });
   let colors = getUniqueColors(imageData);
   postMessage({ stage: "Creating color pallete" });
