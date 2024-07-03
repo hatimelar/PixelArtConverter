@@ -5,7 +5,6 @@ importScripts(
   "intermediateFramebuffer.js"
 );
 onmessage = (event) => {
-  console.log(event);
   if (event.data.job === "initialRender") {
     initialRender(event.data);
   } else if (event.data.job === "render") {
@@ -519,7 +518,6 @@ function drawEdges(imageData, edgeMatrix, pixelSize) {
     for (let x = 0; x < edgeMatrix[0].length; x++) {
       if (edgeMatrix[y][x] != 255) continue;
 
-      console.log(pixelSize);
       const pixelIndex = (x + y * width) * pixelSize * 4;
       for (let j = 0; j < pixelSize; j++) {
         for (let i = 0; i < pixelSize; i++) {

@@ -280,7 +280,6 @@ function bilateralSmoothing(
   texture,
   iterations
 ) {
-  console.log("???????SDASDSADSADSAD");
   gl.bindTexture(gl.TEXTURE_2D, bilateralShadingData.originalImageTexture);
   // Upload the image into the texture.
   var mipLevel = 0; // the largest mip
