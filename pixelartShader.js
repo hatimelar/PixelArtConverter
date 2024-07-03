@@ -422,6 +422,7 @@ function renderPixelart(gl, pixelartShadingData, pixelartConfig, texture) {
   gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
 
   draw();
+  gl.bindTexture(gl.TEXTURE_2D, null);
 
   function draw() {
     // Draw the rectangle.
