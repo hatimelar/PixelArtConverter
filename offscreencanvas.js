@@ -81,7 +81,7 @@ function createPixelart(msg) {
     ),
     intermediateBuffer[1]
   );
-
+  gl.finish();
   let imageData = getImageDataFromBuffer(null);
 
   postMessage({ stage: "Drawing edges" });
@@ -105,7 +105,7 @@ function smoothImage(iterations, image) {
     intermediateBuffer[1],
     iterations
   );
-
+  gl.finish();
   return getImageDataFromBuffer(intermediateBuffer[0]);
 }
 
