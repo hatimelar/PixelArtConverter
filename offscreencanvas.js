@@ -85,13 +85,13 @@ function createPixelart(msg) {
   let imageData = getImageDataFromBuffer(null);
 
   postMessage({ stage: "Drawing edges" });
-  /*if (msg.enableEdges) {
+  if (msg.enableEdges) {
     let pixelMatrix = pixelMatrixFromImageData(smoothedImageData);
     pixelMatrix = subsamplePixelmatrix(pixelMatrix, msg.pixelSize);
 
     const edgeMatrix = cannyEdgeDetection(pixelMatrix, msg.edgeSensitivity);
     drawEdges(imageData, edgeMatrix, msg.pixelSize);
-  }*/
+  }
 
   postMessage(imageData);
 }

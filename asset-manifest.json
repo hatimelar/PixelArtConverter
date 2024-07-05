@@ -1,16 +1,29 @@
 {
   "files": {
-    "main.js": "/PixelArtConverter/static/js/main.8b689224.js",
+    "main.js": "/PixelArtConverter/static/js/main.6ae6404e.js",
+    "static/media/7.png": "/PixelArtConverter/static/media/7.7f4a88fae35059b8b08c.png",
+    "static/media/8.png": "/PixelArtConverter/static/media/8.230252c1ec3174fb4c63.png",
+    "static/media/5.png": "/PixelArtConverter/static/media/5.00ea5d4646a1e879fcf2.png",
     "static/media/1.jpg": "/PixelArtConverter/static/media/1.2cb16eaf43e34ff0593a.jpg",
     "static/media/3.jpg": "/PixelArtConverter/static/media/3.2f379945c81a6475ef0f.jpg",
+    "static/media/original.jpg": "/PixelArtConverter/static/media/original.35eff6e1279ab65916bd.jpg",
+    "static/media/6.png": "/PixelArtConverter/static/media/6.7b76ffb7a5fd5a7815bf.png",
     "static/media/4.jpg": "/PixelArtConverter/static/media/4.b966f7922888a0035e1e.jpg",
-    "static/media/step_0.jpg": "/PixelArtConverter/static/media/step_0.f91182eedc8aae80965e.jpg",
+    "static/media/4.png": "/PixelArtConverter/static/media/4.7184b52dda724ca0ce7f.png",
+    "static/media/2.png": "/PixelArtConverter/static/media/2.6776c800617942a77e0d.png",
+    "static/media/3.png": "/PixelArtConverter/static/media/3.86fccb01f6124644af00.png",
+    "static/media/9.png": "/PixelArtConverter/static/media/9.df1cf7a1eba1c0878d87.png",
+    "static/media/11.png": "/PixelArtConverter/static/media/11.6e669b1aa44d3a613e2f.png",
+    "static/media/10.png": "/PixelArtConverter/static/media/10.c9e653b41ab73c055c4f.png",
+    "static/media/ex33.png": "/PixelArtConverter/static/media/ex33.8d3ffc2f6b5360dc4ea2.png",
+    "static/media/1.png": "/PixelArtConverter/static/media/1.de4f01ae2cc7aeeeeb6a.png",
+    "static/media/100.png": "/PixelArtConverter/static/media/100.b9dd07f476b0385890f2.png",
     "static/media/0.jpg": "/PixelArtConverter/static/media/0.eb118a87a6a69b1c27db.jpg",
     "static/media/2.jpg": "/PixelArtConverter/static/media/2.ebeb9b66e8365134b695.jpg",
     "index.html": "/PixelArtConverter/index.html",
-    "main.8b689224.js.map": "/PixelArtConverter/static/js/main.8b689224.js.map"
+    "main.6ae6404e.js.map": "/PixelArtConverter/static/js/main.6ae6404e.js.map"
   },
   "entrypoints": [
-    "static/js/main.8b689224.js"
+    "static/js/main.6ae6404e.js"
   ]
 }

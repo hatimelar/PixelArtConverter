@@ -387,6 +387,7 @@ function bilateralSmoothing(
 
     // loop through each effect we want to apply.
     var count = 0;
+
     for (let i = 0; i < iterations * 2; i++) {
       gl.uniform1i(bilateralShadingData.vRunLocation, count % 2);
       setFramebuffer(
