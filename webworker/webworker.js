@@ -4,8 +4,7 @@ importScripts(
   "edgeDetector.js",
   "webgl-utils.js",
   "bilateralShader.js",
-  "pixelartShader.js",
-  "intermediateFramebuffer.js"
+  "pixelartShader.js"
 );
 onmessage = (event) => {
   if (event.data.job === "initialRender") {
@@ -27,7 +26,6 @@ let smoothedImageData;
 let bilateralShadingData;
 let knollPixelartShadingData;
 let orderedPixelartShadingData;
-let intermediateBuffer;
 let palettes;
 
 function startup() {
@@ -36,7 +34,6 @@ function startup() {
   bilateralShadingData = setupBilateralFilterShadingProgram(gl);
   knollPixelartShadingData = setupPixelartShadingProgram(gl, true);
   orderedPixelartShadingData = setupPixelartShadingProgram(gl, false);
-  intermediateBuffer = getIntermediateFramebuffer(gl);
 }
 
 function initialRender(msg) {
@@ -82,7 +79,7 @@ function createPixelart(msg) {
       msg.ditheringIntensity / 100,
       palette
     ),
-    intermediateBuffer[1]
+    smoothedImageData
   );
   gl.finish();
   let imageData = getImageDataFromBuffer(null);
@@ -100,16 +97,9 @@ function createPixelart(msg) {
 }
 
 function smoothImage(iterations, image) {
-  bilateralSmoothing(
-    gl,
-    bilateralShadingData,
-    image,
-    intermediateBuffer[0],
-    intermediateBuffer[1],
-    iterations
-  );
+  bilateralSmoothing(gl, bilateralShadingData, image, iterations);
   gl.finish();
-  return getImageDataFromBuffer(intermediateBuffer[0]);
+  return getImageDataFromBuffer(null);
 }
 
 function getImageDataFromBuffer(fbo) {

@@ -272,14 +272,7 @@ function setupBilateralFilterShadingProgram(gl) {
   );
 }
 
-function bilateralSmoothing(
-  gl,
-  bilateralShadingData,
-  image,
-  buffer,
-  texture,
-  iterations
-) {
+function bilateralSmoothing(gl, bilateralShadingData, image, iterations) {
   gl.bindTexture(gl.TEXTURE_2D, bilateralShadingData.originalImageTexture);
   // Upload the image into the texture.
   var mipLevel = 0; // the largest mip
@@ -316,25 +309,6 @@ function bilateralSmoothing(
       data
     );
   }
-  gl.bindTexture(gl.TEXTURE_2D, texture);
-  // make the texture the same size as the image
-  var mipLevel = 0; // the largest mip
-  var internalFormat = gl.RGBA; // format we want in the texture
-  var border = 0; // must be 0
-  var srcFormat = gl.RGBA; // format of data we are supplying
-  var srcType = gl.UNSIGNED_BYTE; // type of data we are supplying
-  var data = null; // no data = create a blank texture
-  gl.texImage2D(
-    gl.TEXTURE_2D,
-    mipLevel,
-    internalFormat,
-    gl.canvas.width,
-    gl.canvas.height,
-    border,
-    srcFormat,
-    srcType,
-    data
-  );
 
   // Bind the position buffer so gl.bufferData that will be called
   // in setRectangle puts data in the position buffer
@@ -402,7 +376,7 @@ function bilateralSmoothing(
       count++;
     }
 
-    setFramebuffer(buffer, gl.canvas.width, gl.canvas.height);
+    setFramebuffer(null, gl.canvas.width, gl.canvas.height);
 
     // Clear the buffer
     gl.clearColor(0, 0, 0, 0);

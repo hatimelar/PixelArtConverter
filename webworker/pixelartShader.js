@@ -349,9 +349,22 @@ function setupPixelartShadingProgram(gl, useKnollDithering) {
   );
 }
 
-function renderPixelart(gl, pixelartShadingData, pixelartConfig, texture) {
+function renderPixelart(gl, pixelartShadingData, pixelartConfig, image) {
   // Upload the image into the texture.
-
+  gl.bindTexture(gl.TEXTURE_2D, pixelartShadingData.originalImageTexture);
+  // Upload the image into the texture.
+  var mipLevel = 0; // the largest mip
+  var internalFormat = gl.RGBA; // format we want in the texture
+  var srcFormat = gl.RGBA; // format of data we are supplying
+  var srcType = gl.UNSIGNED_BYTE; // type of data we are supplying
+  gl.texImage2D(
+    gl.TEXTURE_2D,
+    mipLevel,
+    internalFormat,
+    srcFormat,
+    srcType,
+    image
+  );
   // Bind the position buffer so gl.bufferData that will be called
   // in setRectangle puts data in the position buffer
   gl.bindBuffer(gl.ARRAY_BUFFER, pixelartShadingData.positionBuffer);
@@ -374,7 +387,7 @@ function renderPixelart(gl, pixelartShadingData, pixelartConfig, texture) {
 
   // start with the original image on unit 0
   gl.activeTexture(gl.TEXTURE0);
-  gl.bindTexture(gl.TEXTURE_2D, texture);
+  gl.bindTexture(gl.TEXTURE_2D, pixelartShadingData.originalImageTexture);
 
   // Tell the shader to get the texture from texture unit 0
   gl.uniform1i(pixelartShadingData.imageLocation, 0);
